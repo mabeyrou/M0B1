@@ -1,5 +1,5 @@
 from loguru import logger
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from nltk.sentiment import SentimentIntensityAnalyzer
 
@@ -15,6 +15,12 @@ class Text(BaseModel):
 @app.post('/analyse_sentiment')
 async def analyse_sentiment(text:Text) -> dict[str, float]:
     logger.info(f'Texte à analyser : {text.text}')
-    sentiment = sia.polarity_scores(text.text)
-    logger.info(f'Résultats affichés: : {sentiment}')
+    try:
+        sentiment = sia.polarity_scores(text.text)
+        logger.info(f"Résultats affichés : {sentiment}")
+
+    except Exception as err:
+        logger.error(f"Erreur lors de l'analyse : {err}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Erreur interne lors de l'analyse du sentiment")
+
     return sentiment
