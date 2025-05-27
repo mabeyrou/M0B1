@@ -19,4 +19,12 @@ source .venv/bin/activate
 ```bash
 pip install -r requirement.tx
 ```
-
+## Launch app
+### Launch server
+```bash
+uvicorn sentiment_api:app --host 127.0.0.1 --port 9000 --reload
+```
+### Launch streamlit
+```bash
+streamlit run sentiment_streamlit.py
+```
